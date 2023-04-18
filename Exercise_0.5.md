@@ -1,31 +1,29 @@
 ```mermaid
 sequenceDiagram
-    participant browser
-    participant server
+   
 
-    browser-->>server: GET https://studies.cs.helsinki.fi/exampleapp/spa
-    activate server
-    server-->> HTML 
-    deactivate server
+    Browser->>+Server: GET https://studies.cs.helsinki.fi/exampleapp/spa
+    Server-->>-Browser:HTML 
+    
 
-    browser-->>server: GET https://studies.cs.helsinki.fi/exampleapp/main.css
-    activate server
-    server-->> CSS 
-    deactivate server
+    Browser->>+Server: GET https://studies.cs.helsinki.fi/exampleapp/main.css
+    
+    Server-->>-Browser:CSS 
+    
 
-    browser-->>server: GET https://studies.cs.helsinki.fi/exampleapp/spa.js
-    activate server
-    server-->> JavaScript
-    deactivate server
+    Browser->>+Server: GET https://studies.cs.helsinki.fi/exampleapp/spa.js
+    
+    Server-->>-Browser:JavaScript
+    
 
-    browser-->>server: GET https://studies.cs.helsinki.fi/exampleapp/data.json
-    activate server
-    server-->>  JSON
-    deactivate server
+    Browser->>+Server: GET https://studies.cs.helsinki.fi/exampleapp/data.json
+    
+    Server-->>-Browser: JSON
+    
 
-    browser-->>server: GET https://studies.cs.helsinki.fi/favicon.ico
-    activate server
-    server-->> HTML
-    deactivate server
+    Browser->>+Server: GET https://studies.cs.helsinki.fi/favicon.ico
+    
+    Server-->>-Browser: HTML
+    
     
 ```

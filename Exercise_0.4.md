@@ -1,41 +1,32 @@
 ```mermaid
-sequenceDiagram
-    participant browser
-    participant server
+sequenceDiagram 
 
-    browser-->>server: POST https://studies.cs.helsinki.fi/exampleapp/new_note
-    activate server
-    server-->> HTML
-    deactivate server
+    Browser->>+Server: POST https://studies.cs.helsinki.fiexampleapp/new_note
+    
+    Server-->>-Browser:HTML
+    
 
-    browser-->> GET https://studies.cs.helsinki.fi/exampleapp/notes
-    activate server
-    server-->> HTML
-    deactivate server
+    Browser->>+Server: GET https://studies.cs.helsinki.fi/exampleapp/notes
+    
+    Server-->>-Browser:HTML    
 
-    browser-->> GET https://studies.cs.helsinki.fi/exampleapp/main.css
-    activate server
-    server-->> CSS 
-    deactivate server
+    Browser->>+Server: GET https://studies.cs.helsinki.fi/exampleapp/main.css
+    
+    Server-->>-Browser: CSS    
 
-    browser-->> GET https://studies.cs.helsinki.fi/exampleapp/main.js
-    activate server
-    server-->> JavaScript
-    deactivate server
+    Browser->>+Server: GET https://studies.cs.helsinki.fi/exampleapp/main.js
+    
+    Server-->>-Browser: JAVASCRIPT (Upon recieving JS file, browser exectutes code which requests JSON file)
+ 
 
-        Note right of the browser: Upon recieving JS file, browser exectutes code which requests JSON file 
+    Browser->>+Server: https://studies.cs.helsinki.fi/exampleapp/data.json
+    
+    Server-->>-Browser: JSON  (Browser renders its contents in presentable way with chrome extension)   
 
-    browser-->> GET https://studies.cs.helsinki.fi/exampleapp/data.json
-    activate server
-    server-->> JSON content of notes
-    deactivate server
 
-        Note right of browser: Browser renders its contents in presentable way with chrome extension
-
-    browser-->> GET https://studies.cs.helsinki.fi/favicon.ico
-    activate server
-    server-->> HTML
-    deactivate server
+    Browser->>+Server: GET https://studies.cs.helsinki.fi/favicon.ico
+    
+    Server-->>-Browser: HTML     
 ```
 
 
