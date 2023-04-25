@@ -6,7 +6,7 @@ const InputChecker = ({ allClicks }) => {
   }
 };
 
-const PositiveNum = ({ allClicks }) => {
+const PositiveNum = ({ allClicks, text }) => {
   const count = allClicks.reduce((count, num) => {
     if (num === 1) {
       return count + 1;
@@ -14,10 +14,14 @@ const PositiveNum = ({ allClicks }) => {
       return count;
     }
   }, 0);
-  return <p>Positive: {count}</p>;
+  return (
+    <p>
+      {text}: {count}
+    </p>
+  );
 };
 
-const NeutralNum = ({ allClicks }) => {
+const NeutralNum = ({ allClicks, text }) => {
   const count = allClicks.reduce((count, num) => {
     if (num === 0) {
       return count + 1;
@@ -25,10 +29,14 @@ const NeutralNum = ({ allClicks }) => {
       return count;
     }
   }, 0);
-  return <p>Neutral: {count}</p>;
+  return (
+    <p>
+      {text}: {count}
+    </p>
+  );
 };
 
-const NegativeNum = ({ allClicks }) => {
+const NegativeNum = ({ allClicks, text }) => {
   const count = allClicks.reduce((count, num) => {
     if (num === -1) {
       return count + 1;
@@ -36,7 +44,11 @@ const NegativeNum = ({ allClicks }) => {
       return count;
     }
   }, 0);
-  return <p>Negative: {count}</p>;
+  return (
+    <p>
+      {text}: {count}
+    </p>
+  );
 };
 
 const SumCount = ({ allClicks }) => {
@@ -51,7 +63,7 @@ const Average = ({ allClicks }) => {
   const sumForAvg = allClicks.reduce((total, num) => {
     return total + num;
   }, 0);
-  let avg = sumForAvg / allClicks.length;
+  let avg = (sumForAvg / allClicks.length).toFixed(4);
   return <p>Average: {avg}</p>;
 };
 
@@ -99,9 +111,9 @@ const App = () => {
       <InputChecker allClicks={allClicks} />
       {allClicks.length === 0 ? null : (
         <>
-          <PositiveNum allClicks={allClicks} />
-          <NeutralNum allClicks={allClicks} />
-          <NegativeNum allClicks={allClicks} />
+          <PositiveNum allClicks={allClicks} text="Good" />
+          <NeutralNum allClicks={allClicks} text="Neutral" />
+          <NegativeNum allClicks={allClicks} text="Bad" />
           <SumCount allClicks={allClicks} />
           <Average allClicks={allClicks} />
           <PositivePerc allClicks={allClicks} />
