@@ -15,9 +15,9 @@ const PositiveNum = ({ allClicks, text }) => {
     }
   }, 0);
   return (
-    <p>
-      {text}: {count}
-    </p>
+    <tr>
+      <td>{text}</td> <td>{count}</td>
+    </tr>
   );
 };
 
@@ -30,9 +30,9 @@ const NeutralNum = ({ allClicks, text }) => {
     }
   }, 0);
   return (
-    <p>
-      {text}: {count}
-    </p>
+    <tr>
+      <td>{text}</td> <td>{count}</td>
+    </tr>
   );
 };
 
@@ -45,39 +45,53 @@ const NegativeNum = ({ allClicks, text }) => {
     }
   }, 0);
   return (
-    <p>
-      {text}: {count}
-    </p>
+    <tr>
+      <td>{text}</td> <td>{count}</td>
+    </tr>
   );
 };
 
-const SumCount = ({ allClicks }) => {
+const SumCount = ({ allClicks, text }) => {
   let sum = 0;
   allClicks.forEach((element) => {
     return sum++;
   });
-  return <p>Total: {sum}</p>;
+  return (
+    <tr>
+      <td>{text}</td> <td>{sum}</td>
+    </tr>
+  );
 };
 
-const Average = ({ allClicks }) => {
+const Average = ({ allClicks, text }) => {
   const sumForAvg = allClicks.reduce((total, num) => {
     return total + num;
   }, 0);
   let avg = (sumForAvg / allClicks.length).toFixed(4);
-  return <p>Average: {avg}</p>;
+  return (
+    <tr>
+      <td>{text}</td> <td>{avg}</td>
+    </tr>
+  );
 };
 
-const PositivePerc = ({ allClicks }) => {
+const PositivePerc = ({ allClicks, text }) => {
   let positive = allClicks.filter((click) => click === 1);
   let total = allClicks.length;
   let percentage = ((positive.length / total) * 100).toFixed(2);
-  return <p>Positive: {percentage}%</p>;
+  return (
+    <tr>
+      <td>{text}</td> <td>{percentage}%</td>
+    </tr>
+  );
 };
 
 const Button = ({ handleClick, text }) => {
   return <button onClick={handleClick}>{text}</button>;
 };
 
+//- - - - - - - - - - - - - - - - - - - - - - - - -||
+//_________________Main App________________________||
 const App = () => {
   const [good, setGood] = useState(0);
   const [neutral, setNeutral] = useState(0);
@@ -98,7 +112,7 @@ const App = () => {
     setBad(bad + 1);
     setAll(allClicks.concat(-1));
   };
-
+  //--------------------------------
   return (
     <div>
       <h1>Give feedback</h1>
@@ -110,14 +124,14 @@ const App = () => {
       <h2>Statistics</h2>
       <InputChecker allClicks={allClicks} />
       {allClicks.length === 0 ? null : (
-        <>
+        <table>
           <PositiveNum allClicks={allClicks} text="Good" />
           <NeutralNum allClicks={allClicks} text="Neutral" />
           <NegativeNum allClicks={allClicks} text="Bad" />
-          <SumCount allClicks={allClicks} />
-          <Average allClicks={allClicks} />
-          <PositivePerc allClicks={allClicks} />
-        </>
+          <SumCount allClicks={allClicks} text="Total" />
+          <Average allClicks={allClicks} text="Average" />
+          <PositivePerc allClicks={allClicks} text="Positive" />
+        </table>
       )}
     </div>
   );
