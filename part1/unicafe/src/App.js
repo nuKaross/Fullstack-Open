@@ -1,43 +1,67 @@
 import { useState } from "react";
 
-// Feedback statistics
-const Stats = ({ allClicks }) => {
-  const resultsPNB = [0, 0, 0];
-  //Counts each vote and puts it as a number
-  //Index[0]= P, [1]=N, [2]=B
-  allClicks.forEach((element) => {
-    if (element === "P") {
-      return resultsPNB[0]++;
-    } else if (element === "N") {
-      return resultsPNB[1]++;
-    } else if (element === "B");
-    return resultsPNB[2]++;
-  });
-
-  //All counts sum:
-  const sum = resultsPNB.reduce((total, num) => total + num, 0);
-  //Positive feedback percentage:
-  const positiveFeedBack = (resultsPNB[0] / sum) * 100;
-  //Returns avg feedback as if: good = 1, bad = -1:
-  const avgFeedBack =
-    (resultsPNB[0] - resultsPNB[2]) / (resultsPNB[0] + resultsPNB[2]);
-
-  //What app renders:
-  return (
-    <div>
-      <p>Positive: {resultsPNB[0]}</p>
-      <p>Neutral: {resultsPNB[1]}</p>
-      <p>Bad: {resultsPNB[2]}</p>
-      <p>All results: {sum} </p>
-      <p>
-        Positive feedback: {isNaN(positiveFeedBack) ? 0 : positiveFeedBack}%
-      </p>
-      <p>Average feedback: {isNaN(avgFeedBack) ? 0 : avgFeedBack} </p>
-    </div>
-  );
+const InputChecker = ({ allClicks }) => {
+  if (allClicks.length === 0) {
+    return <h4>No feedback given</h4>;
+  }
 };
 
-//Reusable generic button
+const PositiveNum = ({ allClicks }) => {
+  const count = allClicks.reduce((count, num) => {
+    if (num === 1) {
+      return count + 1;
+    } else {
+      return count;
+    }
+  }, 0);
+  return <p>Positive: {count}</p>;
+};
+
+const NeutralNum = ({ allClicks }) => {
+  const count = allClicks.reduce((count, num) => {
+    if (num === 0) {
+      return count + 1;
+    } else {
+      return count;
+    }
+  }, 0);
+  return <p>Neutral: {count}</p>;
+};
+
+const NegativeNum = ({ allClicks }) => {
+  const count = allClicks.reduce((count, num) => {
+    if (num === -1) {
+      return count + 1;
+    } else {
+      return count;
+    }
+  }, 0);
+  return <p>Negative: {count}</p>;
+};
+
+const SumCount = ({ allClicks }) => {
+  let sum = 0;
+  allClicks.forEach((element) => {
+    return sum++;
+  });
+  return <p>Total: {sum}</p>;
+};
+
+const Average = ({ allClicks }) => {
+  const sumForAvg = allClicks.reduce((total, num) => {
+    return total + num;
+  }, 0);
+  let avg = sumForAvg / allClicks.length;
+  return <p>Average: {avg}</p>;
+};
+
+const PositivePerc = ({ allClicks }) => {
+  let positive = allClicks.filter((click) => click === 1);
+  let total = allClicks.length;
+  let percentage = ((positive.length / total) * 100).toFixed(2);
+  return <p>Positive: {percentage}%</p>;
+};
+
 const Button = ({ handleClick, text }) => {
   return <button onClick={handleClick}>{text}</button>;
 };
@@ -50,17 +74,17 @@ const App = () => {
 
   const handlePositiveClick = () => {
     setGood(good + 1);
-    setAll(allClicks.concat("P"));
+    setAll(allClicks.concat(1));
   };
 
   const handleNeutralClick = () => {
     setNeutral(neutral + 1);
-    setAll(allClicks.concat("N"));
+    setAll(allClicks.concat(0));
   };
 
   const handleBadClick = () => {
     setBad(bad + 1);
-    setAll(allClicks.concat("B"));
+    setAll(allClicks.concat(-1));
   };
 
   return (
@@ -72,7 +96,17 @@ const App = () => {
       <Button handleClick={handleBadClick} text="bad" />
 
       <h2>Statistics</h2>
-      <Stats allClicks={allClicks} />
+      <InputChecker allClicks={allClicks} />
+      {allClicks.length === 0 ? null : (
+        <>
+          <PositiveNum allClicks={allClicks} />
+          <NeutralNum allClicks={allClicks} />
+          <NegativeNum allClicks={allClicks} />
+          <SumCount allClicks={allClicks} />
+          <Average allClicks={allClicks} />
+          <PositivePerc allClicks={allClicks} />
+        </>
+      )}
     </div>
   );
 };
