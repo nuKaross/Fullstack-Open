@@ -1,38 +1,51 @@
-import { useState } from "react"
+import { useState } from "react";
 
 const App = () => {
-  const [persons, setPersons] = useState([])
-  const [newName, setNewName] = useState("")
-  const [newNumber, setNewNumber] = useState("")
+  const [persons, setPersons] = useState([]);
+  const [newName, setNewName] = useState("");
+  const [newNumber, setNewNumber] = useState("");
+  const [filter, setFilter] = useState("");
 
   const AddNew = (event) => {
-    event.preventDefault()
+    event.preventDefault();
     const newObject = {
       name: newName,
       id: newName,
       number: newNumber,
-    }
+    };
     if (persons.some((person) => person.name === newName)) {
-      alert(`${newName} Already Exists`)
+      alert(`${newName} Already Exists`);
     } else {
-      setPersons(persons.concat(newObject))
-      setNewName("")
-      setNewNumber("")
+      setPersons(persons.concat(newObject));
+      setNewName("");
+      setNewNumber("");
     }
-  }
+  };
 
   const handleInputChange = (event) => {
-    console.log(event.target.value)
-    setNewName(event.target.value)
-  }
+    console.log(event.target.value);
+    setNewName(event.target.value);
+  };
 
   const handleNumChange = (event) => {
-    console.log(event.target.value)
-    setNewNumber(event.target.value)
-  }
+    console.log(event.target.value);
+    setNewNumber(event.target.value);
+  };
+
+  const filteredPersons = persons.filter((person) =>
+    person.name.toLowerCase().includes(filter.toLowerCase())
+  );
+
+  const handleFilterChange = (event) => {
+    setFilter(event.target.value);
+  };
+
   return (
     <div>
       <h2>Phonebook</h2>
+      <div>
+        filter by name: <input value={filter} onChange={handleFilterChange} />
+      </div>
       <form>
         <div>
           name: <input value={newName} onChange={handleInputChange} />
@@ -48,7 +61,7 @@ const App = () => {
       </form>
       <h2>Numbers</h2>
       <ol>
-        {persons.map((person) => (
+        {filteredPersons.map((person) => (
           <li key={person.id}>
             <b>Name: </b>
             {person.name}
@@ -58,7 +71,7 @@ const App = () => {
         ))}
       </ol>
     </div>
-  )
-}
+  );
+};
 
-export default App
+export default App;
