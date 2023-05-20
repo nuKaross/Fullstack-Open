@@ -74,8 +74,26 @@ const App = () => {
       name: newName,
       number: newNumber,
     };
-    if (persons.some((person) => person.name === newName)) {
-      alert(`${newName} Already Exists`);
+    const existingPerson = persons.find((person) => person.name === newName);
+
+    if (existingPerson) {
+      const prompt = window.confirm(
+        `${newName} Already Exists, do you want to add update user number?`
+      );
+      if (prompt) {
+        const updatedPerson = { ...existingPerson, number: newNumber };
+        peopleService
+          .update(existingPerson.id, updatedPerson)
+          .then((response) => {
+            setPersons(
+              persons.map((person) =>
+                person.id === existingPerson.id ? response : person
+              )
+            );
+            setNewName("");
+            setNewNumber("");
+          });
+      }
     } else {
       peopleService.create(newObject).then((response) => {
         setPersons(persons.concat(response));
