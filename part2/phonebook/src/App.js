@@ -1,4 +1,6 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import peopleService from "./services/people";
+
 const Filter = ({ filter, handleFilterChange }) => {
   return (
     <div>
@@ -6,7 +8,7 @@ const Filter = ({ filter, handleFilterChange }) => {
     </div>
   );
 };
-const Display = ({ persons, filter }) => {
+const Display = ({ persons, filter, handleDelete }) => {
   const filteredPersons = persons.filter((person) =>
     person.name.toLowerCase().includes(filter.toLowerCase())
   );
@@ -19,6 +21,7 @@ const Display = ({ persons, filter }) => {
           {person.name}
           <b> Num: </b>
           {person.number}
+          <button onClick={() => handleDelete(person.id)}>Delete</button>
         </li>
       ))}
     </ol>
@@ -69,15 +72,30 @@ const App = () => {
     event.preventDefault();
     const newObject = {
       name: newName,
-      id: newName,
       number: newNumber,
     };
     if (persons.some((person) => person.name === newName)) {
       alert(`${newName} Already Exists`);
     } else {
-      setPersons(persons.concat(newObject));
-      setNewName("");
-      setNewNumber("");
+      peopleService.create(newObject).then((response) => {
+        setPersons(persons.concat(response));
+        setNewName("");
+        setNewNumber("");
+      });
+    }
+  };
+
+  useEffect(() => {
+    peopleService.getAll().then((response) => {
+      setPersons(response);
+    });
+  }, []);
+
+  const handleDelete = (id) => {
+    if (window.confirm("Are you sure you want to delete selected contact?")) {
+      peopleService.deletePerson(id).then(() => {
+        setPersons(persons.filter((person) => person.id !== id));
+      });
     }
   };
 
@@ -95,7 +113,7 @@ const App = () => {
         addNew={addNew}
       />
       <h3>Numbers</h3>
-      <Display filter={filter} persons={persons} />
+      <Display filter={filter} persons={persons} handleDelete={handleDelete} />
     </div>
   );
 };
