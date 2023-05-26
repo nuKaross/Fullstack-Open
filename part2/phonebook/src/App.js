@@ -1,6 +1,13 @@
 import { useEffect, useState } from "react";
 import peopleService from "./services/people";
+import "./index.css";
 
+const Notfication = ({ message }) => {
+  if (message === null) {
+    return null;
+  }
+  return <div className="notif">{message}</div>;
+};
 const Filter = ({ filter, handleFilterChange }) => {
   return (
     <div>
@@ -55,6 +62,7 @@ const App = () => {
   const [newName, setNewName] = useState("");
   const [newNumber, setNewNumber] = useState("");
   const [filter, setFilter] = useState("");
+  const [notifMessage, setNotifMessage] = useState(null);
 
   const handleInputChange = (event) => {
     setNewName(event.target.value);
@@ -90,6 +98,11 @@ const App = () => {
                 person.id === existingPerson.id ? response : person
               )
             );
+            setNotifMessage(`Added ${newName} to contacts`);
+            setTimeout(() => {
+              setNotifMessage(null);
+            }, 5000);
+
             setNewName("");
             setNewNumber("");
           });
@@ -97,6 +110,10 @@ const App = () => {
     } else {
       peopleService.create(newObject).then((response) => {
         setPersons(persons.concat(response));
+        setNotifMessage(`Added ${newName} to contacts`);
+        setTimeout(() => {
+          setNotifMessage(null);
+        }, 5000);
         setNewName("");
         setNewNumber("");
       });
@@ -111,15 +128,24 @@ const App = () => {
 
   const handleDelete = (id) => {
     if (window.confirm("Are you sure you want to delete selected contact?")) {
-      peopleService.deletePerson(id).then(() => {
-        setPersons(persons.filter((person) => person.id !== id));
-      });
+      peopleService
+        .deletePerson(id)
+        .then(() => {
+          setPersons(persons.filter((person) => person.id !== id));
+        })
+        .catch((error) => {
+          setNotifMessage(`Contact ${newName} has already been deleted`);
+          setTimeout(() => {
+            setNotifMessage(null);
+          }, 5000);
+        });
     }
   };
 
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notfication message={notifMessage} />
       <Filter filter={filter} handleFilterChange={handleFilterChange} />
 
       <h3>Add a new contact</h3>
