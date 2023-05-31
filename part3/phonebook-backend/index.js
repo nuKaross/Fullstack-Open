@@ -23,3 +23,20 @@ let people = [
     number: "39-23-6423122",
   },
 ];
+
+app.get("/api/people", (request, response) => {
+  response.json(people);
+});
+
+const PORT = 3001;
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+});
+
+app.get("/info", (request, response) => {
+  const numOfPeople = Number(people.length);
+  const date = new Date();
+  response.send(
+    `Current date: ${date},</br> Number of people in phonebook: ${numOfPeople}`
+  );
+});
