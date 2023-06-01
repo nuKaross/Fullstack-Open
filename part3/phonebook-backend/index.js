@@ -41,8 +41,12 @@ app.get("/info", (request, response) => {
   );
 });
 
-app.get(`/people/:id`, (request, response) => {
+app.get(`/api/people/:id`, (request, response) => {
   const id = Number(request.params.id);
   const person = people.find((person) => person.id === id);
-  response.json(person);
+  if (person) {
+    response.json(person);
+  } else {
+    response.send("404 Not found ");
+  }
 });
