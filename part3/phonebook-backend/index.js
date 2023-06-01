@@ -40,3 +40,9 @@ app.get("/info", (request, response) => {
     `Current date: ${date},</br> Number of people in phonebook: ${numOfPeople}`
   );
 });
+
+app.get(`/people/:id`, (request, response) => {
+  const id = Number(request.params.id);
+  const person = people.find((person) => person.id === id);
+  response.json(person);
+});
