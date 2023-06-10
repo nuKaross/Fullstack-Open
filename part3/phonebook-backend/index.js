@@ -1,6 +1,8 @@
 const express = require("express");
 const app = express();
 
+app.use(express.json());
+
 let people = [
   {
     id: 1,
@@ -28,11 +30,6 @@ app.get("/api/people", (request, response) => {
   response.json(people);
 });
 
-const PORT = 3001;
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
-
 app.get("/info", (request, response) => {
   const numOfPeople = Number(people.length);
   const date = new Date();
@@ -49,4 +46,38 @@ app.get(`/api/people/:id`, (request, response) => {
   } else {
     response.send("404 Not found ");
   }
+});
+
+app.delete(`/api/people/:id`, (request, response) => {
+  const id = Number(request.params.id);
+  const person = people.find((people) => people.id, id === id);
+
+  if (person) {
+    response.json(person);
+  } else {
+    response.status(204).end();
+  }
+});
+const generateId = () => {
+  const maxId = people.length > 0 ? Math.max(...people.map((n) => n.id)) : 0;
+  return maxId + 1;
+};
+
+app.post("/api/people", (request, response) => {
+  const body = request.body;
+
+  const person = {
+    id: generateId(),
+    name: body.name,
+    number: body.number,
+  };
+
+  people = people.concat(person);
+
+  response.json(person);
+});
+
+const PORT = 3001;
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
 });
