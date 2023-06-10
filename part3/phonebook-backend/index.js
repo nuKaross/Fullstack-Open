@@ -48,16 +48,13 @@ app.get(`/api/people/:id`, (request, response) => {
   }
 });
 
-app.delete(`/api/people/:id`, (request, response) => {
+app.delete("/api/people/:id", (request, response) => {
   const id = Number(request.params.id);
-  const person = people.find((people) => people.id, id === id);
+  notes = people.filter((n) => n.id !== id);
 
-  if (person) {
-    response.json(person);
-  } else {
-    response.status(204).end();
-  }
+  response.status(204).end();
 });
+
 const generateId = () => {
   const maxId = people.length > 0 ? Math.max(...people.map((n) => n.id)) : 0;
   return maxId + 1;
@@ -65,7 +62,16 @@ const generateId = () => {
 
 app.post("/api/people", (request, response) => {
   const body = request.body;
+  const phoneNumberExists = people.some((p) => p.number === body.number);
 
+  if (!body.name || !body.number) {
+    response.status(400).json({
+      error: "content missing",
+    });
+  }
+  if (phoneNumberExists) {
+    return response.status(400).json({ error: "Phone number already exists" });
+  }
   const person = {
     id: generateId(),
     name: body.name,
