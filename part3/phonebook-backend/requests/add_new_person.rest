@@ -1,4 +1,4 @@
-POST http://localhost:3001/api/people
+POST https://phonebook-test-t65g.onrender.com/
 content-type:application/json
 
 {
