@@ -1,4 +1,4 @@
-POST https://phonebook-test-t65g.onrender.com/
+POST https://phonebook-test-t65g.onrender.com/api/people
 content-type:application/json
 
 {
