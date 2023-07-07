@@ -1,7 +1,7 @@
-POST https://phonebook-test-t65g.onrender.com/api/people
+POST http://localhost:3001/api/people
 content-type:application/json
 
 {
-    "name": "piki puku",
-    "number": "093355432772"
+    "name": "pildasd pffusssdffku",
+    "number": "09335544343252772"
 }
