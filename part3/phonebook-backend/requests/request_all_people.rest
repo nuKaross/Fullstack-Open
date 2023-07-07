@@ -1,1 +1,1 @@
-GET https://phonebook-test-t65g.onrender.com/
+GET http://localhost:3001/api/people

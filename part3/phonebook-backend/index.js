@@ -2,6 +2,8 @@ const express = require("express");
 const app = express();
 const morgan = require("morgan");
 const cors = require("cors");
+const Person = require(`./models/Person.js`);
+require(`dotenv`).config();
 
 app.use(morgan("tiny"));
 app.use(express.json());
@@ -32,7 +34,9 @@ let people = [
 ];
 
 app.get("/api/people", (request, response) => {
-  response.json(people);
+  Person.find({}).then((people) => {
+    response.json(people);
+  });
 });
 
 app.get("/info", (request, response) => {
@@ -44,13 +48,9 @@ app.get("/info", (request, response) => {
 });
 
 app.get(`/api/people/:id`, (request, response) => {
-  const id = Number(request.params.id);
-  const person = people.find((person) => person.id === id);
-  if (person) {
+  Person.findById(request.params.id).then((person) => {
     response.json(person);
-  } else {
-    response.send("404 Not found ");
-  }
+  });
 });
 
 app.delete("/api/people/:id", (request, response) => {
@@ -67,28 +67,24 @@ const generateId = () => {
 
 app.post("/api/people", (request, response) => {
   const body = request.body;
-  const phoneNumberExists = people.some((p) => p.number === body.number);
 
   if (!body.name || !body.number) {
     response.status(400).json({
       error: "content missing",
     });
   }
-  if (phoneNumberExists) {
-    return response.status(400).json({ error: "Phone number already exists" });
-  }
-  const person = {
-    id: generateId(),
+
+  const person = new Person({
     name: body.name,
     number: body.number,
-  };
+  });
 
-  people = people.concat(person);
-  console.log(JSON.stringify(person));
-  response.json(person);
+  person.save().then((savedPerson) => {
+    response.json(savedPerson);
+  });
 });
 
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PORT;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
