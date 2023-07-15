@@ -33,6 +33,14 @@ let people = [
   },
 ];
 
+const errorHandler = (error, request, response, next) => {
+  console.log(error.message);
+  if (error.name === "CastError") {
+    return response.status(400).send({ error: "malformatted id" });
+  }
+  next(error);
+};
+
 app.get("/api/people", (request, response) => {
   Person.find({}).then((people) => {
     response.json(people);
@@ -53,11 +61,12 @@ app.get(`/api/people/:id`, (request, response) => {
   });
 });
 
-app.delete("/api/people/:id", (request, response) => {
-  const id = Number(request.params.id);
-  people = people.filter((n) => n.id !== id);
-
-  response.status(204).end();
+app.delete("/api/people/:id", (request, response, next) => {
+  Person.findByIdAndRemove(request.params.id)
+    .then((result) => {
+      response.status(204).end();
+    })
+    .catch((error) => next(error));
 });
 
 const generateId = () => {
@@ -65,13 +74,16 @@ const generateId = () => {
   return maxId + 1;
 };
 
-app.post("/api/people", (request, response) => {
+app.post("/api/people", (request, response, next) => {
   const body = request.body;
 
   if (!body.name || !body.number) {
-    response.status(400).json({
-      error: "content missing",
-    });
+    response
+      .status(400)
+      .json({
+        error: "content missing",
+      })
+      .catch((error) => next(error));
   }
 
   const person = new Person({
@@ -88,3 +100,19 @@ const PORT = process.env.PORT;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
+
+app.put("/api/people/:id", (request, response, next) => {
+  const body = request.body;
+
+  const updatedPerson = {
+    name: body.name,
+    number: body.number,
+  };
+
+  Person.findByIdAndUpdate(request.params.id, updatedPerson, { new: true })
+    .then((updatedPerson) => {
+      response.json(updatedPerson);
+    })
+    .catch((error) => next(error));
+});
+app.use(errorHandler);
