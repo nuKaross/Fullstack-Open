@@ -3,8 +3,8 @@ POST http://localhost:3003/api/blogs
 content-type:application/json
 
 {
-  "title": "HERI POTAA",
-  "author": "ROWAN ATKISON",
+  "title": "HERIWRNA PORRTAA",
+  "author": "ROWf ISOKISON",
   "url": "https://exampfdsgfsgle.c12515om/my-blog",
-  "likes": 1251
+  "likes": 1252
 }
